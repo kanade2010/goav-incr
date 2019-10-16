@@ -303,7 +303,7 @@ func (ctxt *Context) HWDeviceCtx() *avutil.BufferRef {
 	return (*avutil.BufferRef)(unsafe.Pointer(ctxt.hw_device_ctx))
 }
 
-func (ctxt *Context) SetDefaultGetFormat() {
+/*func (ctxt *Context) SetDefaultGetFormat() {
 	ctxt.get_format = (C.get_format_callback)(unsafe.Pointer(C.avcodec_default_get_format))
 }
 
