@@ -5,6 +5,18 @@ package avcodec
 
 //#cgo pkg-config: libavcodec
 //#include <libavcodec/avcodec.h>
+/*
+int avcodec_open2_native(AVCodecContext* ctxt, AVCodec* c, AVDictionary** d) {
+	if (d != NULL) {
+		AVDictionary *tmp = NULL;
+		av_dict_copy(&tmp, *d, 0);
+
+		return avcodec_open2(ctxt, c, &tmp);
+	} else {
+		return avcodec_open2(ctxt, c, NULL);
+	}
+}
+*/
 import "C"
 import (
 	"unsafe"
@@ -73,7 +85,8 @@ func (ctxt *Context) AvcodecCopyContext(ctxt2 *Context) int {
 
 //Initialize the Context to use the given Codec
 func (ctxt *Context) AvcodecOpen2(c *Codec, d **Dictionary) int {
-	return int(C.avcodec_open2((*C.struct_AVCodecContext)(ctxt), (*C.struct_AVCodec)(c), (**C.struct_AVDictionary)(unsafe.Pointer(d))))
+	//return int(C.avcodec_open2((*C.struct_AVCodecContext)(ctxt), (*C.struct_AVCodec)(c), (**C.struct_AVDictionary)(unsafe.Pointer(d))))
+	return int(C.avcodec_open2_native((*C.struct_AVCodecContext)(ctxt), (*C.struct_AVCodec)(c), (**C.struct_AVDictionary)(unsafe.Pointer(d))))
 }
 
 //Close a given Context and free all the data associated with it (but not the Context itself).
@@ -308,11 +321,11 @@ func (ctxt *Context) HWDeviceCtx() *avutil.BufferRef {
 }
 
 //used for qsv
-/*func (ctxt *Context) SetDefaultQsvGetFormat() {
-	ctxt.get_format = (C.get_format_callback)(unsafe.Pointer(C.qsv_get_format))
-}*/
 
-/*
+func (ctxt *Context) SetDefaultQsvGetFormat() {
+	ctxt.get_format = (C.get_format_callback)(unsafe.Pointer(C.qsv_get_format))
+}
+
 #include "libavutil/hwcontext.h"
 #include "libavutil/hwcontext_qsv.h"
 
