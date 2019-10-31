@@ -11,6 +11,18 @@ package avutil
 //#include <libavutil/avutil.h>
 //#include <libavutil/dict.h>
 //#include <stdlib.h>
+/*struct AVDictionary {
+    int count;
+    AVDictionaryEntry *elems;
+};
+
+AVDictionary* av_dict_alloc() {
+	AVDictionary *d;
+	d = av_mallocz(sizeof(struct AVDictionary));
+	d->elems = av_mallocz(sizeof(AVDictionaryEntry));
+
+	return d;
+}*/
 import "C"
 import (
 	"unsafe"
@@ -30,6 +42,10 @@ const (
 	AV_DICT_APPEND          = int(C.AV_DICT_APPEND)
 	AV_DICT_MULTIKEY        = int(C.AV_DICT_MULTIKEY)
 )
+
+func AvDictAlloc() *Dictionary {
+	return (*Dictionary)(C.av_dict_alloc())
+}
 
 func (d *Dictionary) AvDictGet(key string, prev *DictionaryEntry, flags int) *DictionaryEntry {
 	Ckey := C.CString(key)
