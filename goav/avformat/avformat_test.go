@@ -4,7 +4,7 @@ package avformat_test
 import (
 	"testing"
 
-	"github.com/ailumiyana/goav-incr/goav/avformat"
+	"github.com/giorgisio/goav/avformat"
 	"github.com/stretchr/testify/assert"
 )
 
