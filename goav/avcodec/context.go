@@ -8,6 +8,8 @@ package avcodec
 //#include "libavutil/hwcontext.h"
 //#include "libavutil/hwcontext_qsv.h"
 /*
+typedef enum AVPixelFormat (*get_format_callback)(struct AVCodecContext *s, const enum AVPixelFormat * fmt);
+
 enum AVPixelFormat qsv_get_format(AVCodecContext *avctx, const enum AVPixelFormat *pix_fmts)
 {
     while (*pix_fmts != AV_PIX_FMT_NONE) {
