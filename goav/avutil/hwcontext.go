@@ -2,6 +2,7 @@ package avutil
 
 //#cgo pkg-config: libavutil
 //#include <libavutil/hwcontext.h>
+//#include <libavutil/hwcontext_qsv.h>
 //#include <libavutil/buffer.h>
 import "C"
 import (
@@ -13,7 +14,7 @@ type (
 	HWDeviceContext	   C.struct_AVHWDeviceContext
 	HWFramesContext	   C.struct_AVHWFramesContext
 	BufferRef		   C.struct_AVBufferRef
-	//AVQSVFramesContext C.struct_AVQSVFramesContext
+	AVQSVFramesContext C.struct_AVQSVFramesContext
 )
 
 const (
@@ -130,11 +131,11 @@ func (c *HWFramesContext)SetHWFramesContextPrarms2(format, sw_format PixelFormat
 	c.initial_pool_size = (C.int)(s)
 }
 
-/*func (c *HWFramesContext)SetQsvHWFramesContextPrarms(format, sw_format PixelFormat, w, h, s int) { //initial_pool_size ) {
+func (c *HWFramesContext)SetQsvHWFramesContextPrarms(format, sw_format PixelFormat, w, h, s int) { //initial_pool_size ) {
 	c.format    = (C.enum_AVPixelFormat)(format)
 	c.sw_format = (C.enum_AVPixelFormat)(sw_format)
 	c.width     = (C.int)(w) 
 	c.height	= (C.int)(h)
 	c.initial_pool_size = (C.int)(s)
 	((*AVQSVFramesContext)((*C.struct_AVQSVFramesContext)(unsafe.Pointer(c.hwctx)))).frame_type = (C.int)(16)
-}*/
+}
