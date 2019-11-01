@@ -5,6 +5,45 @@ package avcodec
 
 //#cgo pkg-config: libavcodec
 //#include <libavcodec/avcodec.h>
+//#include "libavutil/hwcontext.h"
+//#include "libavutil/hwcontext_qsv.h"
+/*
+enum AVPixelFormat qsv_get_format(AVCodecContext *avctx, const enum AVPixelFormat *pix_fmts)
+{
+    while (*pix_fmts != AV_PIX_FMT_NONE) {
+        if (*pix_fmts == AV_PIX_FMT_QSV) {
+            AVHWFramesContext  *frames_ctx;
+            AVQSVFramesContext *frames_hwctx;
+            int ret;
+
+            avctx->hw_frames_ctx = av_hwframe_ctx_alloc(avctx->hw_device_ctx);
+            if (!avctx->hw_frames_ctx)
+                return AV_PIX_FMT_NONE;
+            frames_ctx   = (AVHWFramesContext*)avctx->hw_frames_ctx->data;
+            frames_hwctx = frames_ctx->hwctx;
+
+            frames_ctx->format            = AV_PIX_FMT_QSV;
+            frames_ctx->sw_format         = avctx->sw_pix_fmt;
+            frames_ctx->width             = FFALIGN(avctx->coded_width,  32);
+            frames_ctx->height            = FFALIGN(avctx->coded_height, 32);
+            frames_ctx->initial_pool_size = 64;
+
+            frames_hwctx->frame_type = 16;//MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
+
+            ret = av_hwframe_ctx_init(avctx->hw_frames_ctx);
+            if (ret < 0)
+                return AV_PIX_FMT_NONE;
+
+            return AV_PIX_FMT_QSV;
+        }
+
+        pix_fmts++;
+    }
+
+    fprintf(stderr, "The QSV pixel format not offered in get_format()\n");
+
+    return AV_PIX_FMT_NONE;
+}*/
 import "C"
 import (
 	"unsafe"
@@ -303,52 +342,6 @@ func (ctxt *Context) HWDeviceCtx() *avutil.BufferRef {
 	return (*avutil.BufferRef)(unsafe.Pointer(ctxt.hw_device_ctx))
 }
 
-/*func (ctxt *Context) SetDefaultGetFormat() {
-	ctxt.get_format = (C.get_format_callback)(unsafe.Pointer(C.avcodec_default_get_format))
-}
-
-//used for qsv
-/*func (ctxt *Context) SetDefaultQsvGetFormat() {
+func (ctxt *Context) SetDefaultQsvGetFormat() {
 	ctxt.get_format = (C.get_format_callback)(unsafe.Pointer(C.qsv_get_format))
-}*/
-
-/*
-#include "libavutil/hwcontext.h"
-#include "libavutil/hwcontext_qsv.h"
-
-enum AVPixelFormat qsv_get_format(AVCodecContext *avctx, const enum AVPixelFormat *pix_fmts)
-{
-    while (*pix_fmts != AV_PIX_FMT_NONE) {
-        if (*pix_fmts == AV_PIX_FMT_QSV) {
-            AVHWFramesContext  *frames_ctx;
-            AVQSVFramesContext *frames_hwctx;
-            int ret;
-
-            avctx->hw_frames_ctx = av_hwframe_ctx_alloc(avctx->hw_device_ctx);
-            if (!avctx->hw_frames_ctx)
-                return AV_PIX_FMT_NONE;
-            frames_ctx   = (AVHWFramesContext*)avctx->hw_frames_ctx->data;
-            frames_hwctx = frames_ctx->hwctx;
-
-            frames_ctx->format            = AV_PIX_FMT_QSV;
-            frames_ctx->sw_format         = avctx->sw_pix_fmt;
-            frames_ctx->width             = FFALIGN(avctx->coded_width,  32);
-            frames_ctx->height            = FFALIGN(avctx->coded_height, 32);
-            frames_ctx->initial_pool_size = 64;
-
-            frames_hwctx->frame_type = 16;//MFX_MEMTYPE_VIDEO_MEMORY_DECODER_TARGET;
-
-            ret = av_hwframe_ctx_init(avctx->hw_frames_ctx);
-            if (ret < 0)
-                return AV_PIX_FMT_NONE;
-
-            return AV_PIX_FMT_QSV;
-        }
-
-        pix_fmts++;
-    }
-
-    fprintf(stderr, "The QSV pixel format not offered in get_format()\n");
-
-    return AV_PIX_FMT_NONE;
-}*/
+}
